@@ -221,6 +221,25 @@ module JenkinsApi
         job_names
       end
 
+      # List jobs in a nested view
+      #
+      # @param [String] base_name
+      # @param [String] sub_name
+      #
+      # @return [Array] job_names list of jobs in the specified view
+      #
+      def list_jobs_nested_view(base_view, sub_view)
+        @logger.info "Obtaining the jobs present in view '#{sub_view}'"
+        job_names = []
+        raise "The view #{sub_view} doesn't exists on the server"\
+          unless exists?(base_view)
+        response_json = @client.api_get_request("/view/#{path_encode base_view}/view/#{path_encode sub_view}")
+        response_json["jobs"].each do |job|
+          job_names << job["name"]
+        end
+        job_names
+      end
+
       # List jobs in view along with their details
       #
       # @param [String] view_name
