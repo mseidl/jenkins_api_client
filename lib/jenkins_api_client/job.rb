@@ -104,6 +104,23 @@ module JenkinsApi
         @client.post_config("/createItem?name=#{form_encode job_name}", xml)
       end
 
+      # Create a job with the name specified and the xml given in a nested view
+      #
+      # @param job_name [String] the name of the job
+      # @param base_view [String] the name of the first view
+      # @param sub_view  [String] the name of the nested view
+      # @param xml [String] the xml configuration of the job
+      #
+      # @see #create_or_update
+      # @see #update
+      #
+      # @return [String] the HTTP status code from the POST request
+      #
+      def create_in_view(job_name, base_view, sub_view, xml)
+        @logger.info "Creating job '#{job_name} in #{sub_view}'"
+        @client.post_config("/view/#{path_encode base_view}/view/#{path_encode sub_view}/createItem?name=#{form_encode job_name}", xml)
+      end
+
       # Update a job with the name specified and the xml given
       #
       # @param job_name [String] the name of the job
